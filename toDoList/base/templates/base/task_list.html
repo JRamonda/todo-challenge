@@ -1,0 +1,49 @@
+{% extends 'base/main.html' %}
+{% block content %}
+
+  <div class="header-bar">
+    <div>
+      <h1>Hola {{request.user|title}}!</h1>
+      <h3>Tienes {{count}} tarea{{ count|pluralize:"s" }} incompleta{{ count|pluralize:"s" }}</h3>
+    </div>
+    <a href="{% url 'logout' %}"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+  </div>
+
+  <div class="search-add-wrapper">
+    <form method="GET" class="search-form-wrapper">
+      <input type="text" name="search-area" value="{{search_input}}">
+      <button class="button" type="submit"><i class="fa fa-search"></i>  Buscar</button>
+    </form>
+    <a href="{% url 'task-create' %}"><i class="fa fa-plus"></i></a>
+  </div>
+
+  <div class="task-items-wrapper">
+    {% for task in tasks %}
+      <div class="task-wrapper">
+        {% if task.complete %}
+          <div class="task-title">
+            <i class="fa-solid fa-circle-check fa-xl"></i>
+            <i><s><a href="{% url 'task-update' task.id %}">{{task}}</a></s></i>
+          </div>
+          <div>
+            <i><s><label>{{task.create}}</label></s></i>
+            <a class="delete-link" href="{% url 'task-delete' task.id %}"><i class="fa-solid fa-trash"></i></a>
+          </div>
+
+        {% else %}
+          <div class="task-title">
+            <i class="fa-solid fa-circle fa-xl"></i>
+            <a href="{% url 'task-update' task.id %}">{{task}}</a>
+          </div>
+          <div>
+            <label>{{task.create}}</label>
+            <a class="delete-link" href="{% url 'task-delete' task.id %}"><i class="fa-solid fa-trash"></i></a>
+          </div>
+        {% endif %}
+      </div>
+      {% empty %}
+      <h3>No items in list</h3>
+    {% endfor %}
+  </div>
+
+{% endblock content %}
