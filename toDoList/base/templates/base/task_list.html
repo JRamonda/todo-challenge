@@ -11,7 +11,7 @@
 
   <div class="search-add-wrapper">
     <form method="GET" class="search-form-wrapper">
-      <input type="text" name="search-area" value="{{search_input}}">
+      <input type="text" name="search-area" value="{{search_input}}" placeholder="Nombre o YYYY-MM-DD">
       <button class="button" type="submit"><i class="fa fa-search"></i>  Buscar</button>
     </form>
     <a href="{% url 'task-create' %}"><i class="fa fa-plus"></i></a>
@@ -42,7 +42,9 @@
         {% endif %}
       </div>
       {% empty %}
-      <h3>No items in list</h3>
+        <div class="card-body">
+          <h3>No hay tareas</h3>
+        </div>
     {% endfor %}
   </div>
 

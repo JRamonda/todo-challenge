@@ -9,7 +9,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 
 from .models import Task
-
+from datetime import datetime
 import logging
 
 logger = logging.getLogger('main')
@@ -53,10 +53,24 @@ class TaskList(LoginRequiredMixin, ListView):
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context['tasks'] = context['tasks'].filter(user=self.request.user)
+
     context['count'] = context['tasks'].filter(complete=False).count()
     search_input = self.request.GET.get('search-area') or ''
+
     if search_input:
-      context['tasks'] = context['tasks'].filter(title__startswith=search_input)
+      # checking if format matches the date
+      res = True
+      
+      # using try-except to check for truth value
+      try:
+          res = bool(datetime.strptime(search_input, "%Y-%m-%d"))
+      except ValueError:
+          res = False
+
+      if res:
+        context['tasks'] = context['tasks'].filter(create__contains=search_input)
+      else:
+        context['tasks'] = context['tasks'].filter(title__startswith=search_input)
 
       logger.info('Se ha buscado una tarea')
 
